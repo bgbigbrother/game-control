@@ -1,0 +1,28 @@
+{
+  "name": "ec2022",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/js/main.js",
+  "scripts": {
+    "serve": "webpack serve",
+    "ws": "node wsServer.js",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "style-loader": "^3.2.1",
+    "webpack": "^5.47.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2",
+    "ws": "^8.8.1"
+  },
+  "dependencies": {
+    "ffmpeg": "^0.0.4"
+  }
+}
