@@ -20,18 +20,21 @@ ws_server.on('connection', function connection(ws) {
 
     setInterval(() => {
         const file = frames[i];
-        const data = fs.readFileSync('./src/frames/' + file).toString('base64');
-        if(i === 1735) {
+        if (fs.existsSync('./src/frames/' + file)) {
+            const data = fs.readFileSync('./src/frames/' + file).toString('base64');
+            
+            ws.send(JSON.stringify({
+                type: "frame",
+                meta: "",
+                data: data,
+                id: crypto.randomUUID(),
+                date: new Date(Date.now()).toISOString()
+            }));
+        }
+        if(i >= 1735) {
             i = 0;
         } else {
             i++;
         }
-        ws.send(JSON.stringify({
-            type: "frame",
-            meta: "",
-            data: data,
-            id: crypto.randomUUID(),
-            date: new Date(Date.now()).toISOString()
-        }));
     }, 100)
 });

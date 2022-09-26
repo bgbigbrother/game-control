@@ -23,6 +23,7 @@ export default class Controls {
         document.addEventListener('mousedown', this.start);
         document.addEventListener('mouseup', this.stop);
         document.addEventListener('keydown', this.keys);
+        document.addEventListener('pointerlockchange', this.move, false);
         window.addEventListener('resize', this.resize);
         this.canvas.addEventListener('dblclick', this.dblclick);
         this.resize();
@@ -42,11 +43,14 @@ export default class Controls {
             clearTimeout(this.clickTimeout);
             this.clickTimeout = null;
             this.#mouseId = crypto.randomUUID();
+            this.canvas.requestPointerLock();
             document.addEventListener('mousemove', this.rotate);
-            this.rotate(event);
-            this.sendMessage({method: "rotate", sequenceId: this.#mouseId}, this.coord);
         }, config.dblClickTreshold);
         
+    }
+
+    move = (event) => {
+        this.rotate(event);
     }
 
     stop = (event) => {
@@ -58,7 +62,9 @@ export default class Controls {
             this.sendMessage({method: "stop", sequenceId: this.#mouseId});
             this.#mouseId =  null;
         }
-        
+        if (document.pointerLockElement === this.canvas) {
+            document.exitPointerLock();
+        }
     }
 
     dblclick = (event) => {
@@ -99,7 +105,7 @@ export default class Controls {
 
     rotate = (event) => {
         event && this.reposition(event);
-        this.sendMessage({method: "rotate", sequenceId: this.#mouseId}, this.coord);
+        this.sendMessage({method: "rotate", sequenceId: this.#mouseId}, {stepX: event.movementX || 0, stepY: event.movementY || 0});
     }
 
     reposition(event) {
