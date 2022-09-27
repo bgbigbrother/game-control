@@ -30,7 +30,7 @@ export default class WS {
     }
 
     send(type = "", data = "") {
-        this.#message.id = crypto.randomUUID();
+        this.#message.id = config.guid();
         this.#message.meta = type;
         this.#message.data = data;
         this.#message.date = new Date(Date.now()).toISOString();

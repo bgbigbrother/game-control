@@ -42,7 +42,7 @@ export default class Controls {
         this.clickTimeout = setTimeout(() => {
             clearTimeout(this.clickTimeout);
             this.clickTimeout = null;
-            this.#mouseId = crypto.randomUUID();
+            this.#mouseId = config.guid();
             this.canvas.requestPointerLock();
             document.addEventListener('mousemove', this.rotate);
         }, config.dblClickTreshold);
@@ -91,12 +91,16 @@ export default class Controls {
         if(config.keys[event.keyCode]) {
             document.removeEventListener('keydown', this.keys);
             document.addEventListener('keyup', this.keyup);
-            this.#keyId = crypto.randomUUID();
-            this.sendMessage({method: config.keys[event.keyCode], sequenceId: this.#keyId});
+            this.#keyId = config.guid();
+            this.keyInterval = setInterval(() => {
+                this.sendMessage({method: config.keys[event.keyCode], sequenceId: this.#keyId});
+            }, 100);
         }
     }
 
     keyup = (event) => {
+        this.keyInterval && clearInterval(this.keyInterval);
+        this.keyInterval = null;
         document.removeEventListener('keyup', this.keyup);
         document.addEventListener('keydown', this.keys);
         this.sendMessage({method: "stop", sequenceId: this.#keyId});
