@@ -1,0 +1,29 @@
+# MilestoneIntegrationPlatformVmsResTfulApi.Metadata
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**enabled** | **Boolean** |  | [optional] 
+**displayName** | **String** |  | [optional] 
+**id** | **String** | ID | [optional] 
+**name** | **String** | Name | [optional] 
+**channel** | **Number** | Channel | [optional] 
+**description** | **String** | Description | [optional] 
+**createdDate** | **String** | Created date | [optional] 
+**lastModified** | **String** | Last modified | [optional] 
+**gisPoint** | **String** | Device position. Device position. Position of device in longitude, latitude and potentially altitude.  The format is \&quot;POINT (LONGITUDE LATITUDE)\&quot; and if you want to clear the coordinates, the value to use is \&quot;POINT EMPTY\&quot;.  Examples: \&quot;POINT (55.656932878513 12.3763545558449)\&quot; \&quot;POINT EMPTY\&quot;   Can also include altitude, if so the format is \&quot;POINT (LONGITUDE LATITUDE ALTITUDE)\&quot;  | [optional] 
+**shortName** | **String** | Short name. Used as name in the user interface where appropriate. | [optional] 
+**icon** | **Number** | Icon identifier. The relevant device icon to show. | [optional] 
+**coverageDirection** | **Number** | Direction. Indicate the viewing direction of the device. | [optional] 
+**coverageDepth** | **Number** | Depth. Indicate the viewing depth of the device. | [optional] 
+**coverageFieldOfView** | **Number** | Field of view. Indicate the field of view of the device. | [optional] 
+**recordingEnabled** | **Boolean** | Recording enabled | [optional] 
+**prebufferEnabled** | **Boolean** | Prebuffer enabled | [optional] 
+**prebufferInMemory** | **Boolean** | Prebuffer in memory | [optional] 
+**prebufferSeconds** | **Number** | Prebuffer seconds | [optional] 
+**edgeStorageEnabled** | **Boolean** | Remote recording enabled | [optional] 
+**edgeStoragePlaybackEnabled** | **Boolean** | Remote recording playback | [optional] 
+**manualRecordingTimeoutEnabled** | **Boolean** | Manual recording timeout enabled | [optional] 
+**manualRecordingTimeoutMinutes** | **Number** | Manual recording timeout in minutes | [optional] 
+**recordingStorage** | [**PathStorages**](PathStorages.md) |  | [optional] 
+**relations** | [**MetadataRelations**](MetadataRelations.md) |  | [optional] 

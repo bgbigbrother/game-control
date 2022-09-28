@@ -1,4 +1,6 @@
 import config from "./config";
+import Api from './Api';
+
 export default class Controls {
 
     #keyId = null;
@@ -9,6 +11,7 @@ export default class Controls {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.coord = { x: 0, y: 0 };
+        this.api = new Api();
     }
 
     sendMessage (type, data) {
@@ -68,6 +71,10 @@ export default class Controls {
     }
 
     dblclick = (event) => {
+        this.api.request("getAllrecordingServers", null, (data) => {
+            console.log(data);
+        });
+        event && this.reposition(event);
         this.sendMessage({method: "mark"}, this.coord);
     }
 

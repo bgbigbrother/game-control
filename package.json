@@ -23,6 +23,7 @@
     "ws": "^8.8.1"
   },
   "dependencies": {
-    "ffmpeg": "^0.0.4"
+    "ffmpeg": "^0.0.4",
+    "superagent": "^8.0.0"
   }
 }

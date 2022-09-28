@@ -20,6 +20,19 @@ module.exports = {
          changeOrigin: true,
          ws: true // important
       },
+      '/API': {
+        target: 'http://bgvm-tvh-06.milestone.dk',
+        secure: false,
+      },
+      '/idp': {
+        target: 'http://bgvm-tvh-06.milestone.dk',
+        secure: false,
+      }
+    },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     }
   },
   output: {
