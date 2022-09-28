@@ -1,13 +1,12 @@
 import config from "./config";
 import Token from './Token';
-import {ApiClient, RSApi} from "../rest-api/src/index";
+import {ApiClient, RSApi, CoreApi, DeviceConfigApi} from "../rest-api/src/index";
 
 export default class Api {
     
     #accessToken = null;
 
     constructor() {
-        this.getToken();
     }
 
     initAPI() {
@@ -15,8 +14,21 @@ export default class Api {
         let bearerAuth = defaultClient.authentications['bearerAuth'];
         bearerAuth.type = 'oauth2';
         bearerAuth.accessToken = this.#accessToken.getValue();
-        this.api = new RSApi();
-        this.api.apiClient.basePath = config.vms + config.apiRelativePath;
+
+        let recordingServer = new RSApi();
+        recordingServer.apiClient.basePath = config.vms + config.apiRelativePath;
+
+        let core = new CoreApi();
+        core.apiClient.basePath = config.vms + config.apiRelativePath;
+
+        let device = new DeviceConfigApi();
+        device.apiClient.basePath = config.vms + config.apiRelativePath;
+
+        this.api = {
+            recordingServer: recordingServer,
+            core: core,
+            device: device
+        }
     }
 
     async getToken() {
@@ -31,19 +43,5 @@ export default class Api {
             this.#accessToken = new Token(data);
             this.initAPI();
         });
-    }
-
-    request (method, id = null, callback) {
-        if(this.api[method]) {
-            if(id) {
-                this.api[method](id, (error, data, response) => {
-                    callback &&  callback(data._array);
-                });
-            } else {
-                this.api[method]((error, data, response) => {
-                    callback &&  callback(data._array);
-                });
-            }
-        }
     }
 }

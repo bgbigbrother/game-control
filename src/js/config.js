@@ -10,8 +10,8 @@ export default {
     vms: "http://localhost:8080",
     idpRelativePath: "/idp/connect/token",
     apiRelativePath: "/API/rest/v1",
-    vmsUser: "",
-    vmsPass: "",
+    vmsUser: "sftst",
+    vmsPass: "BGTest1@",
     guid: function () {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
