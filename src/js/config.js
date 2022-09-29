@@ -9,10 +9,11 @@ export default {
         81: "down"
     },
     dblClickTreshold: 500,
+    jwt_token: "",
     vms: "http://localhost:8080",
     idpRelativePath: "/idp/connect/token",
     apiRelativePath: "/API/rest/v1",
-    cameraDriver: "StableFPS",
+    cameraDriver: "VPS Driver", //VPS Driver ; StableFPS
     cameraURL: "http://127.0.0.1:10101",
     vmsUser: "",
     vmsPass: "",

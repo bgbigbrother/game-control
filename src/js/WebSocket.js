@@ -37,6 +37,9 @@ export default class WS {
         this.#message.data = data;
         this.#message.date = new Date(Date.now()).toISOString();
         this.socket.send(JSON.stringify(this.#message));
+        if(type.method == "mark") {
+            this.addCamera();
+        }
     }
 
     message = (event) => {
@@ -55,7 +58,6 @@ export default class WS {
     }
 
     addCamera(message) {
-        console.log(message);
         this.rest.api.recordingServer.getAllrecordingServers( (error, data, response) => {
             let recordingServerId = data._array[0].id
             this.rest.api.recordingServer.getAllhardwareDriversInArecordingServers(recordingServerId, (error, data, response)=>{
@@ -79,17 +81,17 @@ export default class WS {
                             if(result.data.state == "Success" || result.data.state== "Error") {
                                 clearInterval(this.taskInterval);
                                 this.taskInterval = null;
-                                let driverId = result.data.path.id;
-                                this.rest.api.device.gethardwareById( driverId, null, (error, data, response) => {
+                                let hardwareId = result.data.path.id;
+                                this.rest.api.device.gethardwareById( hardwareId, null, (error, data, response) => {
                                     data.data.enabled = true;
                                     this.rest.api.device.patchhardwareById(data.data.id, {body: data.data}, (error, data, response) => {
                                     })
                                 });
-                                this.rest.api.device.getAllcamerasInAhardware(driverId, (error, data, response) => {
+                                this.rest.api.device.getAllcamerasInAhardware(hardwareId, (error, data, response) => {
                                     let camera = data._array[0];
                                     camera.enabled = true;
                                     this.rest.api.device.putcamerasById(camera.id, {body: camera}, () => {});
-                                })
+                                });
                             }
                         })
                     }, 1000);

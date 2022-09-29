@@ -32,16 +32,25 @@ export default class Api {
     }
 
     async getToken() {
-        const response = await fetch(config.vms + config.idpRelativePath, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: "grant_type=password&username=" + config.vmsUser +"&password=" + config.vmsPass + "&client_id=GrantValidatorClient"
-        });
-        response.json().then((data) => {
-            this.#accessToken = new Token(data);
+        if(config.jwt_token) {
+            this.#accessToken = new Token({
+                access_token: config.jwt_token,
+                expires_in: 3600
+            });
             this.initAPI();
-        });
+        } else {
+            const response = await fetch(config.vms + config.idpRelativePath, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: "grant_type=password&username=" + config.vmsUser +"&password=" + config.vmsPass + "&client_id=GrantValidatorClient"
+            });
+            response.json().then((data) => {
+                this.#accessToken = new Token(data);
+                this.initAPI();
+            });
+        }
+        
     }
 }

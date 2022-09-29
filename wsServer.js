@@ -36,5 +36,5 @@ ws_server.on('connection', function connection(ws) {
         } else {
             i++;
         }
-    }, 100)
+    }, 10000)
 });
