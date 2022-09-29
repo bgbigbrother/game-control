@@ -14,8 +14,8 @@ export default {
     apiRelativePath: "/API/rest/v1",
     cameraDriver: "StableFPS",
     cameraURL: "http://127.0.0.1:10101",
-    vmsUser: "sftst",
-    vmsPass: "BGTest1@",
+    vmsUser: "",
+    vmsPass: "",
     guid: function () {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
