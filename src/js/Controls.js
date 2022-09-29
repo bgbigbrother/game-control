@@ -1,5 +1,4 @@
 import config from "./config";
-import Api from './Api';
 
 export default class Controls {
 
@@ -11,8 +10,6 @@ export default class Controls {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.coord = { x: 0, y: 0 };
-        this.rest = new Api();
-        this.rest.getToken();
     }
 
     sendMessage (type, data) {
@@ -72,42 +69,6 @@ export default class Controls {
     }
 
     dblclick = (event) => {
-        this.rest.api.recordingServer.getAllrecordingServers( (error, data, response) => {
-            let recordingServerId = data._array[0].id
-            this.rest.api.recordingServer.getAllhardwareDriversInArecordingServers(recordingServerId, (error, data, response)=>{
-                let driverId = null;
-                data._array.forEach(driver => {
-                    if(driver.name == "StableFPS") {
-                        driverId = driver.id;
-                    }
-                });
-                this.rest.api.recordingServer.postTaskForrecordingServers(recordingServerId, "AddHardware", {body: JSON.stringify({
-                    hardwareAddress: "http://127.0.0.1:10115",
-                    hardwareDriverPath: {
-                        "type": "hardwareDrivers",
-                        "id": driverId
-                    },
-                    userName: "root",
-                })}, (error, data, response) => {
-                    this.taskInterval = setInterval(() => {
-                        this.rest.api.core.gettasksById(data.result.path.id, null, (error, data, response) => {
-                            let result = JSON.parse(response.text);
-                            console.log(result);
-                            if(result.data.state == "Success" || result.data.state== "Error") {
-                                clearInterval(this.taskInterval);
-                                this.taskInterval = null;
-                                this.rest.api.device.gethardwareById( result.data.path.id, null, (error, data, response) => {
-                                    data.data.enabled = true;
-                                    this.rest.api.device.patchhardwareById(data.data.id, {body: data.data}, (error, data, response) => {
-                                        console.log(error, data, response);
-                                    })
-                                })
-                            }
-                        })
-                    }, 1000);
-                })
-            })
-        });
         event && this.reposition(event);
         this.sendMessage({method: "mark"}, this.coord);
     }

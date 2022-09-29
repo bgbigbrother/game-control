@@ -12,6 +12,8 @@ export default {
     vms: "http://localhost:8080",
     idpRelativePath: "/idp/connect/token",
     apiRelativePath: "/API/rest/v1",
+    cameraDriver: "StableFPS",
+    cameraURL: "http://127.0.0.1:10101",
     vmsUser: "sftst",
     vmsPass: "BGTest1@",
     guid: function () {

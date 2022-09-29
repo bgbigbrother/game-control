@@ -274,7 +274,7 @@ export class DeviceConfigApi {
         'id': id
       };
       let queryParams = {
-        
+        disabled: 'true'
       };
       let headerParams = {
         
