@@ -108,9 +108,6 @@ export default class Controls {
                 })
             })
         });
-        // this.rest.api.device.getAllhardware( (error, data, response) => {
-        //     console.log(error, data, response);
-        // })
         event && this.reposition(event);
         this.sendMessage({method: "mark"}, this.coord);
     }

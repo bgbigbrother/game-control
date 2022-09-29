@@ -4,7 +4,9 @@ export default {
         65: "left",
         68: "right",
         87: "forward",
-        83: "backwards"
+        83: "backwards",
+        69: "up",
+        81: "down"
     },
     dblClickTreshold: 500,
     vms: "http://localhost:8080",
