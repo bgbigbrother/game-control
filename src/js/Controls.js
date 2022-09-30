@@ -40,10 +40,10 @@ export default class Controls {
     }
 
     start = (event) => {
-        this.clickTimeout = setTimeout(() => {
-            clearTimeout(this.clickTimeout);
-            this.clickTimeout = null;
-            this.#mouseId = config.guid();
+        this.#mouseId = config.guid();
+        this.dblClickTimeout = setTimeout(() => {
+            clearTimeout(this.dblClickTimeout);
+            this.dblClickTimeout = null;
             this.canvas.requestPointerLock();
             document.addEventListener('mousemove', this.rotate);
         }, config.dblClickTreshold);
@@ -55,11 +55,20 @@ export default class Controls {
     }
 
     stop = (event) => {
-        if(this.clickTimeout) {
+        document.removeEventListener('mousemove', this.rotate);
+        if(this.dblClickTimeout) {
+            clearTimeout(this.dblClickTimeout);
+            this.dblClickTimeout = null;
             clearTimeout(this.clickTimeout);
             this.clickTimeout = null;
+            this.clickTimeout = setTimeout(() => {
+                clearTimeout(this.clickTimeout);
+                this.clickTimeout = null;
+                this.reposition(event);
+                this.sendMessage({method: "click", sequenceId: this.#mouseId}, this.coord);
+                this.#mouseId =  null;
+            }, config.dblClickTreshold);
         } else {
-            document.removeEventListener('mousemove', this.rotate);
             this.sendMessage({method: "stop", sequenceId: this.#mouseId});
             this.#mouseId =  null;
         }
@@ -69,6 +78,8 @@ export default class Controls {
     }
 
     dblclick = (event) => {
+        clearTimeout(this.clickTimeout);
+        this.clickTimeout = null;
         event && this.reposition(event);
         this.sendMessage({method: "mark"}, this.coord);
     }
@@ -94,9 +105,13 @@ export default class Controls {
             document.removeEventListener('keydown', this.keys);
             document.addEventListener('keyup', this.keyup);
             this.#keyId = config.guid();
-            this.keyInterval = setInterval(() => {
-                this.sendMessage({method: config.keys[event.keyCode], sequenceId: this.#keyId});
-            }, 100);
+            this.sendMessage({method: config.keys[event.keyCode], sequenceId: this.#keyId});
+            if(event.keyCode !== 82) {
+                this.keyInterval = setInterval(() => {
+                    this.sendMessage({method: config.keys[event.keyCode], sequenceId: this.#keyId});
+                }, 100);
+            }
+            
         }
     }
 
