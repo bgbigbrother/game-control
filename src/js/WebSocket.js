@@ -58,46 +58,51 @@ export default class WS {
     }
 
     addCamera(message) {
-        this.rest.api.recordingServer.getAllrecordingServers( (error, data, response) => {
-            let recordingServerId = data._array[0].id
-            this.rest.api.recordingServer.getAllhardwareDriversInArecordingServers(recordingServerId, (error, data, response)=>{
-                let driverId = null;
-                data._array.forEach(driver => {
-                    if(driver.name == config.cameraDriver) {
-                        driverId = driver.id;
-                    }
-                });
-                this.rest.api.recordingServer.postTaskForrecordingServers(recordingServerId, "AddHardware", {body: JSON.stringify({
-                    hardwareAddress: config.cameraURL,
-                    hardwareDriverPath: {
-                        "type": "hardwareDrivers",
-                        "id": driverId
-                    },
-                    userName: "root",
-                })}, (error, data, response) => {
-                    this.taskInterval = setInterval(() => {
-                        this.rest.api.core.gettasksById(data.result.path.id, null, (error, data, response) => {
-                            let result = JSON.parse(response.text);
-                            if(result.data.state == "Success" || result.data.state== "Error") {
-                                clearInterval(this.taskInterval);
-                                this.taskInterval = null;
-                                let hardwareId = result.data.path.id;
-                                this.rest.api.device.gethardwareById( hardwareId, null, (error, data, response) => {
-                                    data.data.enabled = true;
-                                    this.rest.api.device.patchhardwareById(data.data.id, {body: data.data}, (error, data, response) => {
-                                    })
-                                });
-                                this.rest.api.device.getAllcamerasInAhardware(hardwareId, (error, data, response) => {
-                                    let camera = data._array[0];
-                                    camera.enabled = true;
-                                    this.rest.api.device.putcamerasById(camera.id, {body: camera}, () => {});
-                                });
-                            }
-                        })
-                    }, 1000);
+        if(message) {
+            this.rest.api.recordingServer.getAllrecordingServers( (error, data, response) => {
+                let recordingServerId = data._array[0].id
+                this.rest.api.recordingServer.getAllhardwareDriversInArecordingServers(recordingServerId, (error, data, response)=>{
+                    let driverId = null;
+                    data._array.forEach(driver => {
+                        if(driver.name == config.cameraDriver) {
+                            driverId = driver.id;
+                        }
+                    });
+                    this.rest.api.recordingServer.postTaskForrecordingServers(recordingServerId, "AddHardware", {body: JSON.stringify({
+                        hardwareAddress: config.cameraURL,
+                        hardwareDriverPath: {
+                            "type": "hardwareDrivers",
+                            "id": driverId
+                        },
+                        userName: message,
+                        customData: message
+                    })}, (error, data, response) => {
+                        this.taskInterval = setInterval(() => {
+                            this.rest.api.core.gettasksById(data.result.path.id, null, (error, data, response) => {
+                                let result = JSON.parse(response.text);
+                                if(result.data.state == "Success" || result.data.state== "Error") {
+                                    clearInterval(this.taskInterval);
+                                    this.taskInterval = null;
+                                    let hardwareId = result.data.path.id;
+                                    this.rest.api.device.gethardwareById( hardwareId, null, (error, data, response) => {
+                                        data.data.enabled = true;
+                                        data.data.displayName = message;
+                                        data.data.name = message;
+                                        this.rest.api.device.patchhardwareById(data.data.id, {body: data.data}, (error, data, response) => {
+                                        })
+                                    });
+                                    this.rest.api.device.getAllcamerasInAhardware(hardwareId, (error, data, response) => {
+                                        let camera = data._array[0];
+                                        camera.enabled = true;
+                                        this.rest.api.device.putcamerasById(camera.id, {body: camera}, () => {});
+                                    });
+                                }
+                            })
+                        }, 1000);
+                    })
                 })
-            })
-        });
+            });
+        }
     }
 
     error = (event) => {

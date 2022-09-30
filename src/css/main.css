@@ -3,8 +3,8 @@
   padding: 0;
 }
 canvas {
-  width: 100vw;
-  height: 100vh;
+  width: calc(100vw - 5px);
+  height: calc(100vh - 5px);
 }
 
 video {
